@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   createBrowserRouter,
@@ -16,6 +16,7 @@ import ErrorPage from './ErrorPage'
 import Header from './Header'
 import Footer from './Footer'
 
+import { AuthContext } from './authContext'
 
 function Layout() {
   return (
@@ -47,6 +48,26 @@ const router = createBrowserRouter([
   }
 ])
 
+
+// basically we're creating values that we're going to track and update, and then we need to wrap that whole thing around the app
+const AuthContextProvider = ({ children }) => {
+  const [accessToken, setAccessToken] = useState()
+
+  const auth = {
+    accessToken,
+    setAccessToken
+  }
+
+  return (
+    <AuthContext.Provider value={{ auth }} >
+      {children}
+      </AuthContext.Provider>
+  )
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router} />
+  <AuthContextProvider>
+   <RouterProvider router={router} />
+  </AuthContextProvider>
 )
+
